@@ -1,0 +1,17 @@
+:concurrency: 5
+staging:
+  :concurrency: 10
+production:
+  :concurrency: 10
+:queues:
+  - [default, 10]
+  - [critical, 30]
+
+:scheduler:
+  :enabled: true
+  :schedule:
+    process_submissions:
+      every: "1min"
+      class: SubmissionManagement::Cron::ProcessAll
+      queue: critical
+      description: ""
