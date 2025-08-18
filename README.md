@@ -1,24 +1,37 @@
-# README
+# Reply Suggest
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## How it works?
 
-Things you may want to cover:
+TODO
 
-* Ruby version
+## Install & Run
 
-* System dependencies
+```
+bundle
+rails db:create
+rails db:migrate
 
-* Configuration
+# Create .env file and fill ENV variables
 
-* Database creation
+rails s
 
-* Database initialization
+bundle exec sidekiq -C config/sidekiq.yml
+```
 
-* How to run the test suite
+## Existing endpoints:
 
-* Services (job queues, cache servers, search engines, etc.)
+### List all submissions
 
-* Deployment instructions
+TODO
 
-* ...
+### Display sepcific submission
+
+TODO
+
+### Accept submission
+
+TODO
+
+### Reject submission
+
+TODO

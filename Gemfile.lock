@@ -375,6 +375,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  dotenv
   factory_bot_rails
   kamal
   pg (~> 1.1)

@@ -11,7 +11,7 @@ production:
   :enabled: true
   :schedule:
     process_submissions:
-      every: "1min"
-      class: SubmissionManagement::Cron::ProcessAll
+      every: "15sec"
+      class: SubmissionManagement::Crons::ProcessAll
       queue: critical
       description: ""

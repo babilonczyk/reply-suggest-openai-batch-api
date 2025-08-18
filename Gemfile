@@ -52,4 +52,5 @@ group :development, :test do
 
   gem "factory_bot_rails"
   gem "rspec-rails", "~> 8.0.0"
+  gem "dotenv"
 end
