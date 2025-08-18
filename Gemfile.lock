@@ -376,6 +376,7 @@ DEPENDENCIES
   brakeman
   debug
   dotenv
+  factory_bot
   factory_bot_rails
   kamal
   pg (~> 1.1)

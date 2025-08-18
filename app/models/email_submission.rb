@@ -1,3 +1,5 @@
-class EmailSubmission < ApplicationRecord
-  has_one :submission, as: :source
+class EmailSubmission < BaseSubmission
+  def content
+    message
+  end
 end

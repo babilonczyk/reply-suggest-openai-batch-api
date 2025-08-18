@@ -3,11 +3,14 @@ module Types
     PENDING = "Pending"
     public_constant :PENDING
 
-    APPROVED = "Approved"
-    public_constant :APPROVED
+    ACCEPTED = "Accepted"
+    public_constant :ACCEPTED
+
+    REJECTED = "Rejected"
+    public_constant :REJECTED
 
     def self.all
-      [ PENDING, APPROVED ]
+      [ PENDING, APPROVED, REJECTED ]
     end
   end
 end

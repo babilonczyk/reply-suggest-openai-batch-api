@@ -19,11 +19,10 @@ class Api::V1::SubmissionsController < ApplicationController
 
     render json: { error: "Submission not found" }, status: :not_found unless submission
 
-    # submission = SubmissionManagement::AcceptSubmission.new(submission: submission)
+    result = SubmissionManagement::AcceptSubmission.new(submission: submission)
+    return { error: result[:error] } if result[:error]
 
-    # return { error: submission[:error] } if submission[:error]
-
-    # render json: Api::V1::SubmissionResource.new(submission).serialize, status: :ok
+    render json: Api::V1::SubmissionResource.new(result[:submission]).serialize, status: :ok
   end
 
   def reject
@@ -31,32 +30,32 @@ class Api::V1::SubmissionsController < ApplicationController
 
     render json: { error: "Submission not found" }, status: :not_found unless submission
 
-    # submission = SubmissionManagement::RejectSubmission.new(submission: submission)
+    result = SubmissionManagement::RejectSubmission.new(submission: submission)
+    return { error: result[:error] } if result[:error]
 
-    # return { error: submission[:error] } if submission[:error]
-
-    # render json: Api::V1::SubmissionResource.new(submission).serialize, status: :ok
+    render json: Api::V1::SubmissionResource.new(result[:submission]).serialize, status: :ok
   end
 
   def create
     source_type = submission_params[:source_type]
+    source_types = Types::SubmissionSource.all
 
-    { error: "Invalid source type" } unless Types::SubmissionSource.all.include?(source_type.to_sym)
+    return { error: "Invalid source type `#{source_type}` (#{source_types})" } unless source_types.include?(source_type.to_sym)
 
-    # source = SubmissionManagement::CreateSource.new(source_type: source_type, **submission_params)
+    ActiveRecord::Base.transaction do
+      result_source = SubmissionManagement::CreateSource.new(source_type: source_type, **submission_params)
+      return { error: result_source[:error] } if result_source[:error]
 
-    # return { error: source[:error] } if source[:error]
+      result_submission = SubmissionManagement::CreateSubmission.new(source: result_source[:source])
+      return { error: result_submission[:error] } if result_submission[:error]
+    end
 
-    # submission = SubmissionManagement::CreateSubmission.new(source: source)
-
-    # return { error: submission[:error] } if submission[:error]
-
-    # render json: Api::V1::SubmissionResource.new(submission).serialize, status: :ok
+    render json: Api::V1::SubmissionResource.new(result_submission[:submission]).serialize, status: :ok
   end
 
   private
 
   def submission_params
-    params.require(:submission).permit(:source_type, :message, :email)
+    params.require(:submission).permit(:id, :source_type, :message, :email)
   end
 end
