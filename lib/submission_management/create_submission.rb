@@ -4,6 +4,7 @@ module SubmissionManagement
       submission = Submission.new
 
       submission.source = source
+      submission.status = Types::SubmissionStatus::PENDING
       submission.content = source.content
       submission.submitted_at = Time.current
 

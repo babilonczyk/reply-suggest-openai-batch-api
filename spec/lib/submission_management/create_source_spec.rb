@@ -11,18 +11,17 @@ RSpec.describe SubmissionManagement::CreateSource do
       let(:message) { "This is a message" }
       let(:params) { { email: email, message: message } }
 
-      context 'when source_type is EMAIL' do
+      context "when source_type is EMAIL" do
         let(:source_type) { Types::Source::EMAIL }
 
         context "and Email source is created successfully" do
           it "returns the EmailSubmission source" do
             result = subject
 
-            expect(result[:source]).to be_a(Hash)
-            expect(result[:source][:source]).to be_a(EmailSubmission)
-            expect(result[:source][:source].email).to eq(email)
-            expect(result[:source][:source].message).to eq(message)
-            expect(result[:source][:source]).to be_persisted
+            expect(result[:source]).to be_a(EmailSubmission)
+            expect(result[:source].email).to eq(email)
+            expect(result[:source].message).to eq(message)
+            expect(result[:source]).to be_persisted
           end
         end
 

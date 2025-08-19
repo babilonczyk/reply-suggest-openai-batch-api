@@ -15,6 +15,7 @@ RSpec.describe SubmissionManagement::RejectSubmission do
         expect(result[:submission]).to eq(submission)
         expect(result[:submission].status).to eq(Types::SubmissionStatus::REJECTED)
         expect(result[:submission].review_comment).to eq(review_comment)
+        expect(result[:submission].submission_batch_id).to be_nil
       end
     end
 
@@ -51,12 +52,14 @@ RSpec.describe SubmissionManagement::RejectSubmission do
           )
         end
 
-        it "returns an error on failed save" do
+        before do
           allow(submission).to receive(:status=)
           allow(submission).to receive(:review_comment=)
+          allow(submission).to receive(:submission_batch_id=)
+        end
 
+        it "returns an error on failed save" do
           result = subject
-
           expect(result[:error]).to eq("Failed to reject submission")
         end
       end

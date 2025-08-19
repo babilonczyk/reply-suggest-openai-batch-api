@@ -19,7 +19,7 @@ class Api::V1::SubmissionsController < ApplicationController
 
     render json: { error: "Submission not found" }, status: :not_found unless submission
 
-    result = SubmissionManagement::AcceptSubmission.new(submission: submission)
+    result = SubmissionManagement::AcceptSubmission.new.call(submission: submission)
     return { error: result[:error] } if result[:error]
 
     render json: Api::V1::SubmissionResource.new(result[:submission]).serialize, status: :ok
@@ -30,24 +30,37 @@ class Api::V1::SubmissionsController < ApplicationController
 
     render json: { error: "Submission not found" }, status: :not_found unless submission
 
-    result = SubmissionManagement::RejectSubmission.new(submission: submission)
+    result = SubmissionManagement::RejectSubmission.new.call(submission: submission, review_comment: params[:review_comment])
     return { error: result[:error] } if result[:error]
 
     render json: Api::V1::SubmissionResource.new(result[:submission]).serialize, status: :ok
   end
 
   def create
-    source_type = submission_params[:source_type]
+    source_type_param = submission_params[:source_type]
+    raw_params = submission_params.except(:source_type).to_h.symbolize_keys
+
     source_types = Types::SubmissionSource.all
 
-    return { error: "Invalid source type `#{source_type}` (#{source_types})" } unless source_types.include?(source_type.to_sym)
+    type_mapping = {
+      "email" => "EmailSubmission"
+    }
 
+    source_type = type_mapping[source_type_param]
+
+    unless source_types.map(&:to_s).include?(source_type)
+      return render json: { error: "Invalid source type `#{source_type}` (#{source_types})" }, status: :unprocessable_entity
+    end
+
+    result_submission = nil
     ActiveRecord::Base.transaction do
-      result_source = SubmissionManagement::CreateSource.new(source_type: source_type, **submission_params)
-      return { error: result_source[:error] } if result_source[:error]
+      result_source = SubmissionManagement::CreateSource.new.call(source_type: source_type, **raw_params)
 
-      result_submission = SubmissionManagement::CreateSubmission.new(source: result_source[:source])
-      return { error: result_submission[:error] } if result_submission[:error]
+      return render json: { error: result_source[:error] }, status: :unprocessable_entity if result_source[:error]
+
+      result_submission = SubmissionManagement::CreateSubmission.new.call(source: result_source[:source])
+
+      return render json: { error: result_submission[:error] }, status: :unprocessable_entity if result_submission[:error]
     end
 
     render json: Api::V1::SubmissionResource.new(result_submission[:submission]).serialize, status: :ok

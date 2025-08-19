@@ -9,7 +9,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :submissions, only: [ :index, :show, :create, :update ]
+      resources :submissions do
+        member do
+          post :accept
+          post :reject
+        end
+      end
     end
   end
 end

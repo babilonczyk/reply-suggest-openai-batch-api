@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_15_212101) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_104039) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,15 +21,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_15_212101) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "submission_batches", force: :cascade do |t|
+    t.string "batch_id", null: false
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "submissions", force: :cascade do |t|
     t.string "source_type", null: false
     t.bigint "source_id", null: false
     t.text "content"
     t.text "generated_reply"
-    t.string "status", default: "pending", null: false
+    t.string "status", null: false
     t.text "review_comment"
     t.datetime "submitted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "submission_batch_id"
+    t.index ["submission_batch_id"], name: "index_submissions_on_submission_batch_id"
   end
 end

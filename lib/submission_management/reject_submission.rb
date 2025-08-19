@@ -6,6 +6,7 @@ module SubmissionManagement
 
       submission.status = Types::SubmissionStatus::REJECTED
       submission.review_comment = review_comment
+      submission.submission_batch_id = nil # reset submission_batch_id to regenerate response with new review comment
       submission.save
 
       return { error: "Failed to reject submission" } unless submission.persisted?

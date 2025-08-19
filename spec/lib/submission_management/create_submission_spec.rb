@@ -29,6 +29,7 @@ RSpec.describe SubmissionManagement::CreateSubmission do
       before do
         allow(Submission).to receive(:new).and_return(submission_double)
         allow(submission_double).to receive(:source=)
+        allow(submission_double).to receive(:status=)
         allow(submission_double).to receive(:content=)
         allow(submission_double).to receive(:submitted_at=)
         allow(submission_double).to receive(:save).and_return(false)

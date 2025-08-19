@@ -15,3 +15,8 @@ production:
       class: SubmissionManagement::Crons::ProcessAll
       queue: critical
       description: ""
+    process_batch_statuses:
+      every: "15sec"
+      class: SubmissionManagement::Crons::CheckBatchStatuses
+      queue: critical
+      description: ""

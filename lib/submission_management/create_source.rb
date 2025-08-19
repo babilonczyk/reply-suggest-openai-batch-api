@@ -13,7 +13,7 @@ module SubmissionManagement
 
       return { error: "Failed to create source: #{source[:error]}" } if source[:error]
 
-      { source: source }
+      { source: source[:source] }
     end
   end
 end
