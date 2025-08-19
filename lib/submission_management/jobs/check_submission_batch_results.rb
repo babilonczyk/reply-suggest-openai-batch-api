@@ -22,6 +22,7 @@ module SubmissionManagement
 
         puts "### => Batch status: #{batch_data['status']}"
 
+        # TODO: Move to core/open_ai
         case batch_data["status"]
         when "completed"
           file_url = "https://api.openai.com/v1/files/#{batch_data["output_file_id"]}/content"
