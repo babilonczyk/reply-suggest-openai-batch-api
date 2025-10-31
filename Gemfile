@@ -38,7 +38,7 @@ gem "thruster", require: false
 gem "alba"
 gem "sidekiq"
 gem "sidekiq-cron"
-gem "sidekiq-scheduler", "~> 5.0.2"
+gem "sidekiq-scheduler", "~> 6.0.1"
 gem "ruby-openai", ">= 8.2.0"
 
 group :development, :test do
